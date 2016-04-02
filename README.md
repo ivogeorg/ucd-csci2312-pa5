@@ -1,4 +1,5 @@
-## CSCI 2312: Programming Assignment 5 \<\< UNDER DEVELOPMENT \>\>
+## CSCI 2312: Programming Assignment 5 
+## \<\< UNDER DEVELOPMENT \>\>
 
 _templates, STL, C++11, library development_
 
