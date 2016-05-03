@@ -95,6 +95,26 @@ void test_less_usage(ErrorContext &ec, unsigned int numRuns) {
 
             ec.result(pass);
         }
+
+        ec.DESC("Widget");
+
+        {
+            class Widget {
+                unsigned int __id;
+            public:
+                Widget(unsigned int id) : __id(id) {}
+                bool operator<(const Widget &other) const {
+                    return __id < other.__id;
+                }
+            };
+
+            less<Widget> wless;
+            Widget w1(345), w2(456), w3(98);
+
+            pass = wless(w1, w2) && !wless(w2, w3);
+
+            ec.result(pass);
+        }
     }
 }
 
