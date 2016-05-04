@@ -306,7 +306,7 @@ void test_iterator_usage(ErrorContext &ec, unsigned int numRuns) {
             public:
                 Widget() {}
                 void setId(unsigned id) { __id = id; }
-                unsigned getId() { return __id; }
+                unsigned getId() const { return __id; }
             };
 
             const size_t SIZE = 10;
