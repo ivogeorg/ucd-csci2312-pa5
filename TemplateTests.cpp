@@ -4,17 +4,21 @@
 
 #include <iostream>
 #include <cassert>
+#include <limits>
+#include <vector>
+
 
 #include "TemplateTests.h"
+
 #include "less_functor.h"
+
+#include "custom_iterator.h"
 
 using namespace Testing;
 
 #define DESC(x) desc(x, __LINE__)  // ugly hack, but saves some time
 
-namespace std {
-    template <typename T> struct less {};
-}
+using namespace CS2312;
 
 // - - - - - - - - - - T E S T S - - - - - - - - - -
 
@@ -32,13 +36,13 @@ void test_less_smoketest(ErrorContext &ec) {
     class Widget {};
 
     for (int i = 0; i < 10; i++) {
-        CS2312::less<int> iless;
-        CS2312::less<unsigned> uless;
-        CS2312::less<float> fless;
-        CS2312::less<double> dless;
-        CS2312::less<const char *> cless;
-        CS2312::less<std::string> sless;
-        CS2312::less<Widget> wless;
+        less<int> iless;
+        less<unsigned> uless;
+        less<float> fless;
+        less<double> dless;
+        less<const char *> cless;
+        less<std::string> sless;
+        less<Widget> wless;
     }
     ec.result(pass);
 }
@@ -50,17 +54,17 @@ void test_less_usage(ErrorContext &ec, unsigned int numRuns) {
     // Run at least once!!
     assert(numRuns > 0);
 
-    ec.DESC("--- Test - less - usage ---");
+    ec.DESC("--- Test - less - Usage ---");
 
     for (int run = 0; run < numRuns; run ++) {
 
         ec.DESC("primitives");
 
         {
-            CS2312::less<int> iless;
-            CS2312::less<unsigned> uless;
-            CS2312::less<float> fless;
-            CS2312::less<double> dless;
+            less<int> iless;
+            less<unsigned> uless;
+            less<float> fless;
+            less<double> dless;
 
             pass = true;
             pass = pass && iless(4, 5);
@@ -75,10 +79,11 @@ void test_less_usage(ErrorContext &ec, unsigned int numRuns) {
         ec.DESC("C-strings");
 
         {
-            CS2312::less<const char *> cless;
+            less<const char *> cless;
+            char c1[] = "efforts", c2[] = "goals";
 
             pass = true;
-            pass = pass && cless("efforts", "goals");
+            pass = pass && cless(c1, c2);
             pass = pass && !cless("amalgama", "amaglama");
 
             ec.result(pass);
@@ -87,7 +92,7 @@ void test_less_usage(ErrorContext &ec, unsigned int numRuns) {
         ec.DESC("std::string");
 
         {
-            CS2312::less<std::string> sless;
+            less<std::string> sless;
             std::string s1("alamosa"), s2("dolores");
 
             pass = true;
@@ -97,6 +102,226 @@ void test_less_usage(ErrorContext &ec, unsigned int numRuns) {
             ec.result(pass);
         }
 
+        ec.DESC("Widget");
+
+        {
+            class Widget {
+                unsigned int __id;
+            public:
+                Widget(unsigned int id) : __id(id) {}
+                bool operator<(const Widget &other) const {
+                    return __id < other.__id;
+                }
+            };
+
+            less<Widget> wless;
+            Widget w1(345), w2(456), w3(98);
+
+            pass = wless(w1, w2) && !wless(w2, w3);
+
+            ec.result(pass);
+        }
     }
 }
 
+// iterator: smoke test
+void test_iterator_smoketest(ErrorContext &ec) {
+    bool pass;
+
+    ec.DESC("--- Test - iterator - Smoketest ---");
+
+    ec.DESC("instantiation, constructor, destructor");
+    pass = true;
+
+    for (int i = 0; i < 10; i++) {
+
+        // mutable object + iterator
+        fixed_array<double> point3d(3);
+        point3d[0] = 2.3;
+        point3d[1] = 3.2;
+        point3d[2] = 4.2;
+
+        for (fixed_array<double>::iterator it = point3d.begin(); it != point3d.end(); ++it)
+            ;
+
+        for (auto it = point3d.begin(); it != point3d.end(); ++it)
+            ;
+
+        // const object + const_iterator
+        const fixed_array<double> cpoint3d = { 2.3, 3.2, 4.2 };
+
+        for (fixed_array<double>::const_iterator it = cpoint3d.begin(); it != cpoint3d.end(); ++it)
+            ;
+
+        for (auto it = cpoint3d.begin(); it != cpoint3d.end(); ++it)
+            ;
+
+    }
+    ec.result(pass);
+}
+
+// iterator: usage
+void test_iterator_usage(ErrorContext &ec, unsigned int numRuns) {
+    bool pass;
+
+    // Run at least once!!
+    assert(numRuns > 0);
+
+    ec.DESC("--- Test - iterator - Usage ---");
+
+    for (int run = 0; run < numRuns; run++) {
+
+        ec.DESC("T=double, mutable, explicit instantiation");
+
+        {
+            const size_t SIZE = 100;
+            fixed_array<double> centenarray(SIZE);
+            for (unsigned u = 0; u < SIZE; u++) centenarray[u] = 10.0 * u + 3.14;
+
+            for (fixed_array<double>::iterator it = centenarray.begin(); it != centenarray.end(); ++it) {
+                *it = *it + 10;
+            }
+
+            pass = true;
+            unsigned u = 0;
+            for (fixed_array<double>::iterator it = centenarray.begin(); it != centenarray.end(); ++it) {
+                pass = pass && *it == 10.0 * (u++) + 13.14;
+            }
+
+            ec.result(pass);
+        }
+
+        ec.DESC("T=double, mutable, auto");
+
+        {
+            const size_t SIZE = 100;
+            fixed_array<double> centenarray(SIZE);
+            for (unsigned u = 0; u < SIZE; u++) centenarray[u] = 10.0 * u + 3.14;
+
+            for (auto it = centenarray.begin(); it != centenarray.end(); ++it) {
+                *it = *it + 10;
+            }
+
+            pass = true;
+            unsigned u = 0;
+            for (auto it = centenarray.begin(); it != centenarray.end(); ++it) {
+                pass = pass && *it == 10.0 * (u++) + 13.14;
+            }
+
+            ec.result(pass);
+        }
+
+        ec.DESC("T=double, const, explicit instantiation");
+
+        {
+            const fixed_array<double> elevensies =
+                    {3.14, 13.14, 23.14, 33.14, 43.14, 53.14, 63.14, 73.14, 83.14, 93.14, 103.14};
+
+            pass = true;
+            unsigned u = 0;
+            for (fixed_array<double>::const_iterator it = elevensies.begin(); it != elevensies.end(); ++it) {
+                pass = pass && *it == 10.0 * (u++) + 3.14;
+            }
+
+            ec.result(pass);
+        }
+
+        ec.DESC("T=double, const, auto");
+
+        {
+            const fixed_array<double> elevensies =
+                    {3.14, 13.14, 23.14, 33.14, 43.14, 53.14, 63.14, 73.14, 83.14, 93.14, 103.14};
+
+            pass = true;
+            unsigned u = 0;
+            for (auto it = elevensies.begin(); it != elevensies.end(); ++it) {
+                pass = pass && *it == 10.0 * (u++) + 3.14;
+            }
+
+            ec.result(pass);
+        }
+
+        ec.DESC("compare with vector");
+
+        {
+            const size_t SIZE = 100;
+            fixed_array<unsigned> mockarray(SIZE); // note: uninitialized
+
+            // copy the values
+            std::vector<unsigned> vectory;
+            std::copy(mockarray.begin(), mockarray.end(), std::back_inserter(vectory));
+
+            // compare
+            pass = true;
+            unsigned u = 0;
+            for (auto mockelem: mockarray) {
+                pass = pass && mockelem == vectory[u++];
+            }
+
+            // compare
+            u = 0;
+            for (auto vecelem: vectory) {
+                pass = pass && mockarray[u++] == vecelem;
+            }
+
+            ec.result(pass);
+        }
+
+        ec.DESC("prefix vs postfix");
+
+        {
+            const size_t SIZE = 100;
+            fixed_array<unsigned> mockarray(SIZE);
+            for (auto &mockelem: mockarray) mockelem = 5;
+
+            // test prefix
+            auto it = mockarray.begin();
+            auto last = mockarray.begin();
+            for (unsigned u = 0; u < SIZE - 1; u++) last++;
+            do {
+                *(++it) = 3;
+            } while (it != last);
+
+            pass = mockarray[0] == 5;
+
+            // test postfix
+            mockarray[0] = 3;
+            mockarray[SIZE - 1] = 7;
+
+            it = mockarray.begin();
+            last = mockarray.begin();
+            for (unsigned u = 0; u < SIZE - 1; u++) last++;
+            while (it != last) {
+                pass = pass && *(it++) == 3;
+            }
+
+            ec.result(pass);
+        }
+
+        ec.DESC("Widgets");
+
+        {
+            class Widget {
+                unsigned __id;
+            public:
+                Widget() {}
+                void setId(unsigned id) { __id = id; }
+                unsigned getId() { return __id; }
+            };
+
+            const size_t SIZE = 10;
+            fixed_array<Widget> figets(SIZE);
+
+            unsigned u = 0;
+            for (auto it=figets.begin(); it != figets.end(); ++it)
+                it->setId(u);
+
+            pass = true;
+            u = 0;
+            for (auto it=figets.begin(); it != figets.end(); ++it)
+                pass = pass && it->getId() == u;
+
+            ec.result(pass);
+        }
+    }
+}
