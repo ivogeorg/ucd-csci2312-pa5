@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(ucd_csci2312_pa5_impl)
+project(ucd_csci2312_pa5)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
@@ -11,4 +11,4 @@ set(SOURCE_FILES
     main.cpp
     less_functor.h custom_iterator.h)
 
-add_executable(ucd_csci2312_pa5_impl ${SOURCE_FILES})
+add_executable(ucd_csci2312_pa5 ${SOURCE_FILES})
