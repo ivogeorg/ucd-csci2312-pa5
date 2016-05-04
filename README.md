@@ -17,7 +17,7 @@ PA5 is a standalone assignment and does not depend on PA1-PA4.
 
 PA5 is in the test-driven-development (TDD) style, just like the preceding assignments. 
 
-This assignment (PA5-Mini) is a significantly scaled-back version of the original PA5. It contains a set of small exercises with C++ templates.
+This assignment (PA5-Mini) is a significantly scaled-back version of the original PA5. It contains a set of small standalone exercises with C++ templates.
 
 ### Submission
 
@@ -25,7 +25,7 @@ You don't need to submit anything. Once you fork the repository (this is your **
 
 ### Grading
 
-An autograding script will run the test suite against your files. Your grade will be based on the number of tests passed. (E.g. if your code passes 3 out of 6 test cases, your score will be 50% and the grade will be the corresponding letter grade in the course's grading scale). The test suite for PA4 has __(TODO)__ tests. **Note:** The testing and grading will be done with fresh original copies of all the provided files. In the course of development, you can modify them, if you need to, but your changes will not be used. Only your (TODO) files will be used.
+An autograding script will run the test suite against your files. Your grade will be based on the number of tests passed. (E.g. if your code passes 3 out of 6 test cases, your score will be 50% and the grade will be the corresponding letter grade in the course's grading scale). The test suite for PA5 has __(TODO)__ tests. **Note:** The testing and grading will be done with fresh original copies of all the provided files. In the course of development, you can modify them, if you need to, but your changes will not be used. Only your (TODO) files will be used.
 
 ### Compiler
 
@@ -33,7 +33,7 @@ Your program should run on **GCC 4.9.0** or later, or **Clang 3.3** or later. No
 
 ### Due Date
 
-The assignment is due on **Sun, May 8, at 23:59 Mountain time**. No late work. The last commit to your PA5 repository before the deadline will be graded.
+The assignment is due on **Tue, May 10, at 23:59 Mountain time**. No late work. The last commit to your PA5 repository before the deadline will be graded.
 
 ### Honor Code
 
@@ -127,4 +127,6 @@ Notice (i) the `template <>` line, and (ii) that the rest of the class declarati
 5. Write your implementation in file `less_functor.h`.
 
 #### II. Implementing a container iterator
+
+<< IN PROGRESS >>
 
