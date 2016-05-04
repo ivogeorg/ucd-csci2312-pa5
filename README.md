@@ -160,11 +160,11 @@ In this exercise, we have a very simple container, a `fixed_array` and two neste
 
 4. You need to implement the list-initialization constructor for the `fixed_array<T>` so that a constant array can be defined as follows:
 
-```c++
-const fixed_array<double> darr = { 4.5, 6.7, 8.9 };
-```
+  ```c++
+  const fixed_array<double> darr = { 4.5, 6.7, 8.9 };
+  ```
 
-The iterators defined for `darr` will then be of the constant type.
+  The iterators defined for `darr` will then be of the constant type.
 
 5. You need to implement the standard `begin()` and `end()` methods/operators which return iterators to the **first** element and the element **AFTER** the last. Take a look at the [C++ Reference](http://en.cppreference.com/w/cpp/iterator/begin) to make sure you understand this context. Notice that these two operators are _overloaded_ to return either constant or non-constant iterators, depending on the container type.
 
