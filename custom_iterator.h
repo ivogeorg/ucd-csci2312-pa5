@@ -49,11 +49,13 @@ namespace CS2312 {
             }
             self_type operator++(int junk)
             {
-                self_type type = *this;__ptr++;return type;
+                self_type type = *this;
+                __ptr++;
+                return type;
             }
             reference operator*()
             {
-                return *__ptr;
+                return *(__ptr);
             }
             pointer operator->()
             {
@@ -143,7 +145,7 @@ namespace CS2312 {
 
         ~fixed_array()
         {
-            delete[] __data;
+            delete [] __data;
         }
 
         size_type size() const

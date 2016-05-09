@@ -2,6 +2,7 @@
 // Created by HosZul on 5/6/2016.
 //
 
+
 // Complete
 
 #ifndef UCD_CSCI2312_PA5_LESS_FUNCTOR_H
